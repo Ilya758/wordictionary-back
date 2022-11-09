@@ -1,0 +1,41 @@
+{
+  "name": "node-ts-boiler",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.ts",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon --esm --experimental-specifier-resolution=node ./src/server.ts",
+    "start:prod": "cross-env NODE_ENV=production node ./dist/server.js",
+    "lint": "npm run lint:fix && npm run prettier:fix",
+    "lint:fix": "eslint --max-warnings=0 --fix */**.ts",
+    "prettier:fix": "prettier --write src/**.ts",
+    "build": "npm run lint && tsc",
+    "prepare": "husky install"
+  },
+  "keywords": [],
+  "author": "Illia Skaryna",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.27.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
