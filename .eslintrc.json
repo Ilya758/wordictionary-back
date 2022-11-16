@@ -25,7 +25,7 @@
     "prettier"
   ],
   "rules": {
-    "no-console": "warn",
+    "no-console": "off",
     "@typescript-eslint/no-magic-numbers": [
       "error",
       { "ignore": [-1, 0, 1], "ignoreEnums": true }
@@ -40,7 +40,9 @@
         }
       }
     ],
+    "class-methods-use-this": "off",
     "@typescript-eslint/no-explicit-any": "error",
+    "import/prefer-default-export": "off",
     "node/no-unsupported-features/es-syntax": "off",
     "node/no-missing-import": "off",
     "node/no-sync": "error"
