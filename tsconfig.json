@@ -14,9 +14,8 @@
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
-    "baseUrl": "./",
     "typeRoots": ["src/typings"],
-    "types": ["node"]
+    "types": ["node"],
   },
   "include": ["src/**/*"]
 }
