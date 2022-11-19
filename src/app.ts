@@ -9,6 +9,9 @@ import { IController } from './models/IController';
 import errorMiddleware from './middlewares/error.middleware';
 import { DEFAULT_PORT } from './common/enums/defaultPort';
 import * as config from './config';
+import { validateEnv } from './utils/validateEnv';
+
+validateEnv();
 
 const {
   default: { connectionString, nodeEnv, port },
