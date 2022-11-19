@@ -9,13 +9,15 @@
     "moduleResolution": "node",
     "module": "CommonJS",
     "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": false,
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
     "typeRoots": ["src/typings"],
-    "types": ["node"],
+    "types": ["node"]
   },
   "include": ["src/**/*"]
 }
