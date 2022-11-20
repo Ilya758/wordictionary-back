@@ -5,7 +5,7 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import { connect } from 'mongoose';
-import { IController } from './models/IController';
+import { IController } from './common/enums/models/interfaces/IController';
 import errorMiddleware from './middlewares/error.middleware';
 import { DEFAULT_PORT } from './common/enums/defaultPort';
 import * as config from './config';
