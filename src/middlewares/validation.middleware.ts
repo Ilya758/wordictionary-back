@@ -3,7 +3,7 @@ import { validate, ValidationError } from 'class-validator';
 import { RequestHandler } from 'express';
 import HttpCodes from '../common/enums/httpCodes';
 import HttpException from '../exceptions/httpException';
-import { TErrorConstraints } from '../models/types/TErrorConstraints';
+import { TErrorConstraints } from '../common/enums/models/types/TErrorConstraints';
 
 export default (
     type: ClassConstructor<object>,

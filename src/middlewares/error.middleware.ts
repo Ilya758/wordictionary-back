@@ -9,11 +9,10 @@ export default (
   response: Response,
   __: NextFunction
 ): void => {
-  const status = error.status || HttpCodes.InternalServerError;
+  const { status } = error;
   const message = error.message || 'Something went wrong';
 
-  response.status(status).send({
+  response.status(status || HttpCodes.InternalServerError).send({
     message,
-    status,
   });
 };
