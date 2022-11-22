@@ -10,6 +10,7 @@ import HttpException from '../../exceptions/httpException';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import { UserModel } from '../../models/users/user.model';
 import { SALT_ROUNDS } from '../../common/enums/saltRounds';
+import LoginUserDto from '../../common/enums/models/DTO/LoginUserDto';
 
 export default class AuthController implements IController {
   public path = ControllerPaths.Auth;
@@ -25,6 +26,11 @@ export default class AuthController implements IController {
       `${this.path}/register`,
       validationMiddleware(CreateUserDto),
       this.register
+    );
+    this.router.post(
+      `${this.path}/login`,
+      validationMiddleware(LoginUserDto),
+      this.login
     );
   };
 
@@ -54,5 +60,34 @@ export default class AuthController implements IController {
     });
 
     res.send(newUser.id);
+  };
+
+  private login: RequestHandler = async (
+    req: IRequest<LoginUserDto>,
+    res,
+    next
+  ) => {
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email });
+
+    const callLoginErrorException = (): void =>
+      next(
+        new HttpException(
+          HttpCodes.BadRequest,
+          ErrorMessage.InappropriateLoginCredentials
+        )
+      );
+
+    if (user) {
+      const isPasswordEquals = await bcrypt.compare(password, user.password);
+
+      if (isPasswordEquals) {
+        res.send(user.id);
+      } else {
+        callLoginErrorException();
+      }
+    } else {
+      callLoginErrorException();
+    }
   };
 }
