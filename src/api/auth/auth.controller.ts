@@ -11,9 +11,13 @@ import validationMiddleware from '../../middlewares/validation.middleware';
 import { UserModel } from '../../models/users/user.model';
 import { SALT_ROUNDS } from '../../common/enums/saltRounds';
 import LoginUserDto from '../../common/enums/models/DTO/LoginUserDto';
+import { ITokenData } from '../../common/enums/models/interfaces/token/ITokenData';
+import { AuthenticationService } from '../../services';
 
 export default class AuthController implements IController {
   public path = ControllerPaths.Auth;
+
+  public authService = new AuthenticationService();
 
   public router = Router();
 
@@ -58,7 +62,9 @@ export default class AuthController implements IController {
       ...body,
       password: hashedPassword,
     });
+    const tokenData = this.authService.createToken(newUser);
 
+    res.set('Set-Cookie', [this.setCookie(tokenData)]);
     res.send(newUser.id);
   };
 
@@ -80,6 +86,9 @@ export default class AuthController implements IController {
 
     if (user) {
       const isPasswordEquals = await bcrypt.compare(password, user.password);
+      const tokenData = this.authService.createToken(user);
+
+      res.set('Set-Cookie', [this.setCookie(tokenData)]);
 
       if (isPasswordEquals) {
         res.send(user.id);
@@ -90,4 +99,7 @@ export default class AuthController implements IController {
       callLoginErrorException();
     }
   };
+
+  private setCookie = ({ expiresIn, token }: ITokenData): string =>
+    `Authorization=${token}; HttpOnly; Max-Age=${expiresIn}`;
 }
