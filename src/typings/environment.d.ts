@@ -3,5 +3,6 @@ declare namespace NodeJS {
     PORT: string;
     NODE_ENV: string;
     CONNECTION_STRING: string;
+    JWT_STRING: string;
   }
 }
