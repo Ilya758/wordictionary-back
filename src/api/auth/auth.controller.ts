@@ -36,6 +36,7 @@ export default class AuthController implements IController {
       validationMiddleware(LoginUserDto),
       this.login
     );
+    this.router.get(`${this.path}/logout`, this.logout);
   };
 
   private register: RequestHandler = async (
@@ -98,6 +99,11 @@ export default class AuthController implements IController {
     } else {
       callLoginErrorException();
     }
+  };
+
+  private logout: RequestHandler = (_, res) => {
+    res.set('Set-Cookie', ['Authorization=; Max-Age=0']);
+    res.sendStatus(HttpCodes.OK);
   };
 
   private setCookie = ({ expiresIn, token }: ITokenData): string =>
