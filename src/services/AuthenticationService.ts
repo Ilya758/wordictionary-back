@@ -5,7 +5,7 @@ import * as config from '../config';
 import { IUser } from '../models/users/user.interface';
 
 const {
-  default: { jwtString },
+  default: { jwtSecret },
 } = config;
 
 export default class AuthenticationService {
@@ -15,7 +15,7 @@ export default class AuthenticationService {
 
     return {
       expiresIn,
-      token: jwt.sign(storedToken, String(jwtString), { expiresIn }),
+      token: jwt.sign(storedToken, String(jwtSecret), { expiresIn }),
     };
   };
 }
