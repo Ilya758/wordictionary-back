@@ -41,6 +41,7 @@
       }
     ],
     "class-methods-use-this": "off",
+    "no-underscore-dangle": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "import/prefer-default-export": "off",
     "node/no-unsupported-features/es-syntax": "off",
