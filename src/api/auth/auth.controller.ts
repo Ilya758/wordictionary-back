@@ -1,5 +1,4 @@
 import { RequestHandler, Router } from 'express';
-import bcrypt from 'bcrypt';
 import { ErrorMessage } from '../../common/enums/errorMessage';
 import HttpCodes from '../../common/enums/httpCodes';
 import CreateUserDto from '../../common/enums/models/DTO/CreateUserDto';
@@ -8,10 +7,7 @@ import { IRequest } from '../../common/enums/models/interfaces/IRequest';
 import { ControllerPaths } from '../../common/enums/paths';
 import HttpException from '../../exceptions/httpException';
 import validationMiddleware from '../../middlewares/validation.middleware';
-import { UserModel } from '../../models/users/user.model';
-import { SALT_ROUNDS } from '../../common/enums/saltRounds';
 import LoginUserDto from '../../common/enums/models/DTO/LoginUserDto';
-import { ITokenData } from '../../common/enums/models/interfaces/token/ITokenData';
 import { AuthenticationService } from '../../services';
 
 export default class AuthController implements IController {
@@ -44,29 +40,14 @@ export default class AuthController implements IController {
     res,
     next
   ): Promise<void> => {
-    const { body } = req;
-    const { email, password } = body;
+    try {
+      const { cookie, user } = await this.authService.register(req.body);
 
-    if (await UserModel.findOne({ email })) {
-      next(
-        new HttpException(
-          HttpCodes.BadRequest,
-          ErrorMessage.UserWithEmailAlreadyExists
-        )
-      );
-
-      return;
+      res.set('Set-Cookie', [cookie]);
+      res.send(user._id);
+    } catch (error) {
+      next(error);
     }
-
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-    const newUser = await UserModel.create({
-      ...body,
-      password: hashedPassword,
-    });
-    const tokenData = this.authService.createToken(newUser);
-
-    res.set('Set-Cookie', [this.setCookie(tokenData)]);
-    res.send(newUser.id);
   };
 
   private login: RequestHandler = async (
@@ -74,30 +55,24 @@ export default class AuthController implements IController {
     res,
     next
   ) => {
-    const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
-
-    const callLoginErrorException = (): void =>
-      next(
-        new HttpException(
-          HttpCodes.BadRequest,
-          ErrorMessage.InappropriateLoginCredentials
-        )
+    try {
+      const { cookie, isPasswordEquals, user } = await this.authService.login(
+        req.body
       );
 
-    if (user) {
-      const isPasswordEquals = await bcrypt.compare(password, user.password);
-      const tokenData = this.authService.createToken(user);
-
-      res.set('Set-Cookie', [this.setCookie(tokenData)]);
-
       if (isPasswordEquals) {
-        res.send(user.id);
-      } else {
-        callLoginErrorException();
+        res.set('Set-Cookie', [cookie]);
+        res.send(user._id);
+
+        return;
       }
-    } else {
-      callLoginErrorException();
+
+      throw new HttpException(
+        HttpCodes.BadRequest,
+        ErrorMessage.InappropriateLoginCredentials
+      );
+    } catch (error) {
+      next(error);
     }
   };
 
@@ -105,7 +80,4 @@ export default class AuthController implements IController {
     res.set('Set-Cookie', ['Authorization=; Max-Age=0']);
     res.sendStatus(HttpCodes.OK);
   };
-
-  private setCookie = ({ expiresIn, token }: ITokenData): string =>
-    `Authorization=${token}; HttpOnly; Max-Age=${expiresIn}`;
 }
