@@ -45,7 +45,7 @@ export default class AuthenticationService {
     const expiresIn = 3600;
 
     return {
-      expiresIn: 3600,
+      expiresIn,
       token: jwt.sign({ _id }, String(jwtSecret), { expiresIn }),
     };
   };
