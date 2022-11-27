@@ -6,6 +6,7 @@ import HttpException from '../exceptions/httpException';
 import { IGroup } from '../models/group/group.interface';
 import { GroupModel } from '../models/group/group.model';
 import { IUser } from '../models/users/user.interface';
+import { WordModel } from '../models/word/word.model';
 
 export default class GroupService {
   public getAllWordGroups = async (): Promise<IGroup[]> => {
@@ -61,7 +62,13 @@ export default class GroupService {
   public deleteWordGroup = async (_id: string): Promise<void> => {
     const result = await GroupModel.findOneAndDelete({ _id });
 
-    if (result) return;
+    if (result) {
+      const wordsForDeleting = await WordModel.find({ group: _id });
+
+      if (wordsForDeleting.length) await WordModel.deleteMany({ group: _id });
+
+      return;
+    }
 
     throw new HttpException(
       HttpCodes.BadRequest,
