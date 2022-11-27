@@ -7,7 +7,7 @@ import { ControllerPaths } from '../../common/enums/paths';
 import HttpException from '../../exceptions/httpException';
 import authMiddleware from '../../middlewares/auth.middleware';
 import validationMiddleware from '../../middlewares/validation.middleware';
-import WordService from '../../services/WordService';
+import { WordService } from '../../services';
 
 export default class WordController {
   public path = ControllerPaths.Word;
@@ -42,7 +42,7 @@ export default class WordController {
       const { user } = req;
 
       if (user) {
-        const words = await this.wordService.getAllWordsByUser(`${user._id} 1`);
+        const words = await this.wordService.getAllWordsByUser(user._id);
 
         res.send(words);
 
