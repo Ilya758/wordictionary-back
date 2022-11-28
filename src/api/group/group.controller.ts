@@ -2,7 +2,7 @@
 import { RequestHandler, Router } from 'express';
 import { ErrorMessage } from '../../common/enums/errorMessage';
 import HttpCodes from '../../common/enums/httpCodes';
-import CreateWordGroup from '../../common/enums/models/DTO/CreateWordGroup';
+import CreateWordGroupDto from '../../common/enums/models/DTO/CreateWordGroupDto';
 import { IRequest } from '../../common/enums/models/interfaces/IRequest';
 import { ControllerPaths } from '../../common/enums/paths';
 import HttpException from '../../exceptions/httpException';
@@ -27,12 +27,12 @@ export default class GroupController {
       .get(`${this.path}/getAll`, this.getAllWordGroups)
       .post(
         `${this.path}/create`,
-        validationMiddleware(CreateWordGroup),
+        validationMiddleware(CreateWordGroupDto),
         this.createWordGroup
       )
       .patch(
         `${this.path}/:id`,
-        validationMiddleware(CreateWordGroup, true),
+        validationMiddleware(CreateWordGroupDto, true),
         this.updateWordGroup
       )
       .delete(`${this.path}/:id`, this.deleteWordGroup);
@@ -49,7 +49,7 @@ export default class GroupController {
   };
 
   private createWordGroup: RequestHandler = async (
-    req: IRequest<CreateWordGroup>,
+    req: IRequest<CreateWordGroupDto>,
     res,
     next
   ) => {
@@ -74,7 +74,7 @@ export default class GroupController {
   };
 
   private updateWordGroup: RequestHandler = async (
-    req: IRequest<CreateWordGroup>,
+    req: IRequest<CreateWordGroupDto>,
     res,
     next
   ) => {

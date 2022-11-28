@@ -1,6 +1,6 @@
 import { ErrorMessage } from '../common/enums/errorMessage';
 import HttpCodes from '../common/enums/httpCodes';
-import CreateWordGroup from '../common/enums/models/DTO/CreateWordGroup';
+import CreateWordGroupDto from '../common/enums/models/DTO/CreateWordGroupDto';
 import { WordGroupErrorMessages } from '../exceptions/group';
 import HttpException from '../exceptions/httpException';
 import { IGroup } from '../models/group/group.interface';
@@ -21,7 +21,7 @@ export default class GroupService {
   };
 
   public createWordGroup = async (
-    { name }: CreateWordGroup,
+    { name }: CreateWordGroupDto,
     user: IUser
   ): Promise<string> => {
     if (await GroupModel.findOne({ name }))
@@ -37,7 +37,7 @@ export default class GroupService {
 
   public updateWordGroup = async (
     _id: string,
-    { name }: CreateWordGroup
+    { name }: CreateWordGroupDto
   ): Promise<void> => {
     const wordGroup = await GroupModel.findOne({ _id });
 
